@@ -10,22 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class User {
 
-    public $user;
-
-    public function __construct()
-    {
-        if (Auth::user() != null) {
-            $this->user = Auth::user();
-        }else{
-            $this->user = null;
-        }
-    }
-    
-    public function getUser()
-    {
-        return $this->user;
-    }
-
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -36,8 +20,7 @@ class User {
         try {
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-                
-                return redirect()->intended('/');
+                return redirect()->back();
             }
             dd(Auth::attempt($credentials));
      

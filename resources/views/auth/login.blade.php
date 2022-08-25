@@ -12,7 +12,9 @@
             <input type="password" name="password" id="password" class="form-control" placeholder="Password">
         </div>
         <div class="d-flex justify-content-between align-items-center mb-5">
-            <input name="login" id="login" class="btn login-btn" type="button" value="Login">
+            <button  name="login" id="login" class="btn login-btn" type="submit">
+                Login
+            </button>
         </div>
     </form>           
     <p class="login-wrapper-footer-text">Belum punya akun <a href="javascript:void(0)" class="text-reset">Daftar di sini.</a></p>

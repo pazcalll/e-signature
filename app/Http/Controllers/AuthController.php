@@ -8,19 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public $object;
-    
-    public function __construct()
-    {
-        $this->object = new Collector();
-    }
-
     public function index()
     {
         if (Auth::user() == null) {
             return view('layout.guest');
         } else if (Auth::user()->role == 1) {
-            return view('layout.student');
+            return view('layout.student')->with('name', Auth::user()->fullname);
         } else if (Auth::user()->role == 2) {
             return view('layout.lecturer');
         }
@@ -38,17 +31,17 @@ class AuthController extends Controller
     
     public function authenticate(Request $request)
     {
-        $this->object->User()->authenticate($request);
+        return Collector::User()->authenticate($request);
     }
 
     public function register(Request $request)
     {
-        return $this->object->User()->register($request);  
+        return Collector::User()->register($request);  
     }
 
     public function logout(Request $request)
     {
-        return $this->object->User()->logout($request);
+        return Collector::User()->logout($request);
     }
 
 }
