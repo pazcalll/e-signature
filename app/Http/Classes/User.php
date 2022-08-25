@@ -5,6 +5,8 @@ namespace App\Http\Classes;
 use App\Models\User as AppUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class User {
 
@@ -12,7 +14,11 @@ class User {
 
     public function __construct()
     {
-        $this->user = Auth::user();
+        if (Auth::user() != null) {
+            $this->user = Auth::user();
+        }else{
+            $this->user = null;
+        }
     }
     
     public function getUser()
@@ -23,40 +29,63 @@ class User {
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required'],
-            'email' => ['required', 'email'],
+            'userid' => ['required'],
             'password' => ['required'],
         ]);
- 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
- 
-            return redirect()->intended('/');
+        
+        try {
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                
+                return redirect()->intended('/');
+            }
+            dd(Auth::attempt($credentials));
+     
+        } catch (\Throwable $th) {
+            dd($th);
         }
- 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
     }
 
     public function register(Request $request)
     {
         $credentials = $request->validate([
             'fullname' => ['required'],
-            'username' => ['required'],
+            'role' => ['required'],
+            'userid' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required'],
             'c_password' => ['required']
         ]);
 
-        if (AppUser::where('email', $request['email']->orWhere('username', $request['username']))->first()) {
-            return back()->withErrors([
-                'message' => 'Pengguna ini sudah ada.',
+        try {
+            DB::beginTransaction();
+            if (AppUser::where('email', $request['email'])->orWhere('userid', $request['userid'])->first()) {
+                return back()->withErrors([
+                    'message' => 'Pengguna ini sudah ada.',
+                ]);
+            }else if ($request['password'] != $request['c_password']) {
+                return back()->withErrors('Password berbeda dengan konfirmasi, silakan cek lagi.');
+            }
+            $newUser = AppUser::create([
+                'fullname' => $request['fullname'],
+                'userid' => $request['userid'],
+                'role' => $request['role'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password'])
             ]);
-        }else if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
- 
-            return redirect()->intended('/');
+            // dd($newUser);
+            DB::commit();
+            return $this->authenticate($request);
+        } catch (\Throwable $th) {
+            dd($th);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
     }
 }

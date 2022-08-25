@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>@yield('title')</title>
+    <title>Login</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,22 +22,20 @@
         <div class="row">
             <div class="col-sm-6 col-md-7 intro-section">
                 <div class="brand-wrapper">
-                    <h1><a href="https://stackfindover.com/">Logo</a></h1>
+                    <h1><a href="https://stackfindover.com/">E-Signature</a></h1>
                 </div>
                 <div class="intro-content-wrapper">
-                    <h1 class="intro-title">Welcome to website !</h1>
-                    <p class="intro-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
-                    <a href="#!" class="btn btn-read-more">Read more</a>
-                </div>
-                <div class="intro-section-footer">
-                    <nav class="footer-nav">
-                    <a href="#!">Facebook</a>
-                    <a href="#!">Twitter</a>
-                    <a href="#!">Gmail</a>
-                    </nav>
+                    <h1 class="intro-title">Selamat datang di E-Signature !</h1>
+                    <p class="intro-text">
+                        E-Signature adalah aplikasi yang berguna untuk melakukan validasi dari 
+                        sebuah tanda tangan dosen dengan qrcode sebagai tanda pengenal.
+                    </p>
+                    {{-- <a href="#!" class="btn btn-read-more">Read more</a> --}}
                 </div>
             </div>
-            @yield('page')
+            <div class="col-sm-6 col-md-5 form-section">
+                @include('auth.login')
+            </div>            
         </div>
     </div>
 </body>
