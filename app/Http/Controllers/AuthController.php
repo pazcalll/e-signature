@@ -15,7 +15,7 @@ class AuthController extends Controller
         } else if (Auth::user()->role == 1) {
             return view('layout.student')->with('name', Auth::user()->fullname);
         } else if (Auth::user()->role == 2) {
-            return view('layout.lecturer');
+            return view('layout.lecturer')->with('name', Auth::user()->fullname);
         }
     }
 
