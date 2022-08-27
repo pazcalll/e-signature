@@ -18,6 +18,8 @@
         <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
     </head>
     <body>
 
@@ -27,7 +29,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
                 <div class="container">
-                    <a href="#" class="navbar-brand">E - <span class="text-primary">Signature</span></a>
+                    <a href="#" class="navbar-brand">E - <span class="text-primary">Signature</span> | Mahasiswa</a>
 
                     <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -75,56 +77,6 @@
             </div>
         </header>
 
-        <!-- Modal -->
-        <div class="modal fade mt-5" style="" id="staticBackdrop" data-backdrop="static" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <form action="" method="POST">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Form Permohonan Tanda Tangan Digital</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <table style="width: 100%">
-                                    <tbody>
-                                        <tr>
-                                            <td>Dosen</td>
-                                            <td>
-                                                <select class="form-control" name="name" id="name">
-                                                    <option></option>
-                                                    <option value="1">dosen</option>
-                                                    <option value="2">dosen2</option>
-                                                    <option value="3">dosen3</option>
-                                                </select>
-                                                <script>
-                                                    $('select').select2({
-                                                        placeholder: 'Pilih Dosen',
-                                                        dropdownAutoWidth : true,
-                                                        width: '100%'
-                                                    });
-                                                </script>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Perihal</td>
-                                            <td><textarea name="note" id="note" cols="30" class="form-control" rows="10"></textarea></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Understood</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
         <footer class="page-footer bg-image" style="background-image: url({{ asset('img/world_pattern.svg') }});">
             <div class="container">
                 <div class="row mb-5">
@@ -156,20 +108,125 @@
                             <a href="#" class="footer-link">+00 1122 3344 5566</a>
                             <a href="#" class="footer-link">seogram@temporary.com</a>
                         </div>
-                        <div class="col-lg-3 py-3">
-                            <h5>Newsletter</h5>
-                            <p>Get updates, news or events on your mail.</p>
-                            <form action="#">
-                                <input type="text" class="form-control" placeholder="Enter your email..">
-                                <button type="submit" class="btn btn-success btn-block mt-2">Subscribe</button>
-                            </form>
-                        </div>
                     </div>
                 </div>
 
                 <p class="text-center" id="copyright">Copyright &copy; 2020. This template design and develop by <a href="https://macodeid.com/" target="_blank">MACode ID</a></p>
             </div>
         </footer>
+
+		
+        <!-- Modal -->
+        <div class="modal fade mt-5" style="" id="staticBackdrop" data-backdrop="static" data-keyboard="false" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <form novalidate id="form-permohonan">
+                @csrf
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Form Permohonan Tanda Tangan Digital</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <table style="width: 100%">
+                                    <tbody>
+                                        <tr>
+                                            <td>Dosen</td>
+                                            <td>
+                                                <select required class="form-control" name="lecturer_id" id="lecturer_id">
+                                                    <option></option>
+                                                </select>
+                                                <div class="invalid-feedback">Nama dosen tidak boleh kosong.</div>
+                                                <script>
+                                                    $('select').select2({
+                                                        placeholder: 'Pilih Dosen',
+                                                        dropdownAutoWidth : true,
+                                                        width: '100%',
+                                                        ajax: {
+                                                            url: `{{ route("get-lecturer") }}`,
+                                                            data: function (params) {
+                                                                return {
+                                                                    q: $.trim(params.term),
+                                                                    page: params.page || 1
+                                                                };
+                                                            },
+                                                            processResults: function(data) {
+                                                                let results = []
+                                                                data.forEach((element, _index) => {
+                                                                    results.push({
+                                                                        id: element.id,
+                                                                        text: element.fullname
+                                                                    })
+                                                                });
+                                                                return {
+                                                                    results: results
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                                </script>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Perihal</td>
+                                            <td>
+                                                <textarea required name="note" id="note" cols="30" class="form-control" rows="10"></textarea>
+                                                <div class="invalid-feedback">Catatan tidak boleh kosong.</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary">Kirim Permohonan</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            (() => {
+                'use strict';
+
+                const form = document.querySelector('#form-permohonan');
+
+				form.addEventListener('submit', (event) => {
+					console.log(!form.checkValidity())
+					if (!form.checkValidity()) {
+						event.preventDefault();
+						event.stopPropagation();
+					}else if(form.checkValidity()){
+						event.preventDefault()
+						$.ajax({
+							url: "{{ route('signature-req') }}",
+							type: "POST",
+							data: $('form').serialize(),
+							success: (res) => {
+								Toastify({
+									text: "Permohonan telah dikirim",
+									duration: 3000,
+									className: "info",
+									style: {
+										background: "linear-gradient(to right, #00b09b, #96c93d)",
+									}
+								}).showToast();
+								$('.modal').modal('hide')
+								$('#form-permohonan')[0].reset()
+								$('#lecturer_id').val(null).trigger('change');
+								
+								form.classList.remove('was-validated');
+							}
+						})
+					}
+					form.classList.add('was-validated');
+				}, false);
+            })();
+        </script>
 
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 
@@ -179,5 +236,6 @@
 
         <script src="{{ asset('js/theme.js') }}"></script>
     
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     </body>
 </html>

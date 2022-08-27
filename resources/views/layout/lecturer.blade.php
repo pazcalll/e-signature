@@ -27,7 +27,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
                 <div class="container">
-                    <a href="#" class="navbar-brand">E - <span class="text-primary">Signature</span></a>
+                    <a href="#" class="navbar-brand">E - <span class="text-primary">Signature</span> | Dosen</a>
 
                     <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>

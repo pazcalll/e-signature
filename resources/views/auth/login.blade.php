@@ -1,15 +1,17 @@
 <div class="login-wrapper">
     <h2 class="login-title">Masuk</h2>
-    <form id="login" action="{{ route('authenticate') }}" method="POST">
+    <form id="login" novalidate action="{{ route('authenticate') }}" method="POST">
         @csrf
         @method('POST')
         <div class="form-group">
             <label for="userid" class="sr-only">User ID</label>
-            <input type="text" name="userid" id="userid" class="form-control" placeholder="User ID">
+            <input required type="text" name="userid" id="userid" class="form-control" placeholder="User ID">
+            <div class="invalid-feedback">User ID harus diisi.</div>
         </div>
         <div class="form-group mb-3">
             <label for="password" class="sr-only">Password</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+            <input required type="password" name="password" id="password" class="form-control" placeholder="Password">
+            <div class="invalid-feedback">Password harus diisi.</div>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-5">
             <button  name="login" id="login" class="btn login-btn" type="submit">
@@ -20,6 +22,23 @@
     <p class="login-wrapper-footer-text">Belum punya akun <a href="javascript:void(0)" class="text-reset">Daftar di sini.</a></p>
 </div>
 <script>
+    (() => {
+        'use strict';
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('#login');
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach((form) => {
+            form.addEventListener('submit', (event) => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
     $('.text-reset').on('click', function() {
         $('.form-section').html(`
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(255, 255, 255); display: block; shape-rendering: auto;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">

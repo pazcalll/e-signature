@@ -43,4 +43,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function lecturerSignature()
+    {
+        return $this->hasMany(Signature::class, 'lecturer_id', 'id');
+    }
+
+    public function studentRequest()
+    {
+        return $this->hasMany(Signature::class, 'student_id', 'id');
+    }
 }

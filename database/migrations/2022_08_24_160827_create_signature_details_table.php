@@ -31,6 +31,6 @@ class CreateSignatureDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('signature_details');
+        Schema::dropIfExists('SignatureDetails');
     }
 }

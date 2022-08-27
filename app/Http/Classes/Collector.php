@@ -9,4 +9,9 @@ class Collector {
         $user = new User();
         return $user;
     }
+    public function Student()
+    {
+        $student = new Student();
+        return $student;
+    }
 }

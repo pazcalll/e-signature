@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,4 +29,9 @@ Route::middleware('guest')->group(function()
 Route::middleware('auth')->group(function ()
 {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+Route::middleware(['auth', 'student'])->group(function()
+{
+    Route::post('/signature-req', [StudentController::class, 'signatureReq'])->name('signature-req');
+    Route::get('/get-lecturer', [StudentController::class, 'getLecturer'])->name('get-lecturer');
 });
