@@ -14,4 +14,9 @@ class Collector {
         $student = new Student();
         return $student;
     }
+    public function Lecturer()
+    {
+        $lecturer = new Lecturer();
+        return $lecturer;
+    }
 }

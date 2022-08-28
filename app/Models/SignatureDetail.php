@@ -10,8 +10,8 @@ class SignatureDetail extends Model
     use HasFactory;
     protected $fillable = ['hash', 'note', 'signature', 'qrcode'];
 
-    public function signature()
-    {
-        $this->belongsTo(Signature::class);
-    }
+    // public function signature()
+    // {
+    //     return $this->belongsTo(Signature::class);
+    // }
 }

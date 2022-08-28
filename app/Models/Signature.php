@@ -12,16 +12,16 @@ class Signature extends Model
 
     public function signatureDetail()
     {
-        $this->hasOne(SignatureDetail::class);
+        return $this->hasOne(SignatureDetail::class,'id','signature_detail_id');
     }
 
     public function student()
     {
-        $this->belongsTo(User::class, 'student_id');
+        return $this->belongsTo(User::class, 'student_id');
     }
 
     public function lecturer()
     {
-        $this->belongsTo(User::class, 'lecturer_id');
+        return $this->belongsTo(User::class, 'lecturer_id');
     }
 }
