@@ -20,7 +20,7 @@
 
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" integrity="sha512-EZSUkJWTjzDlspOoPSpUFR0o0Xy7jdzW//6qhUkoZ9c4StFkVsp9fbbd0O06p9ELS3H486m4wmrCELjza4JEog==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" integrity="sha512-In/+MILhf6UMDJU4ZhDL0R0fEpsp4D3Le23m6+ujDWXwl3whwpucJG1PEmI3B07nyJx+875ccs+yX2CqQJUxUw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
         
@@ -189,7 +189,24 @@
                             </div>
                             <label for="signature">Tanda Tangan (.png)</label>
                             <br>
-                            <input type="file" data-plugin="dropify" class="dropify form-control" name="signature" id="signature">
+                            <input type="file" onchange="loadFile(event)" data-plugin="dropify" data-allowed-file-extensions="png" data-height="100px" data-min-width="200" data-min-height="200" data-max-file-size="1M" class="dropify" name="signature" id="signature">
+                            <img src="" style="display: none; max-width: 300px" alt="Tanda Tangan Preview">
+                            <canvas width="1200" height="600"></canvas>
+                            <script>
+                                const loadFile = (event) => {
+                                    const image = document.querySelector('img');
+                                    image.src = URL.createObjectURL(event.target.files[0]);
+                                    const canvas = document.querySelector("canvas");
+                                    
+                                    const ctx = canvas.getContext("2d");
+                                    
+                                    //3 arg verison
+                                    setTimeout(() => {
+                                        ctx.drawImage( image, 0, 0, 300, 300);
+                                    }, 300)
+
+                                };
+                            </script>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                                 <button type="button" class="btn btn-primary">Kirim</button>
@@ -238,13 +255,25 @@
             </div>
         </footer>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js" integrity="sha512-8QFTrG0oeOiyWo/VM9Y8kgxdlCryqhIxVeRpWSezdRRAvarxVtwLnGroJgnVW9/XBRduxO/z1GblzPrMQoeuew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.js" integrity="sha512-hJsxoiLoVRkwHNvA5alz/GVA+eWtVxdQ48iy4sFRQLpDrBPn6BFZeUcW4R4kU+Rj2ljM9wHwekwVtsb0RY/46Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
         
-        <script>$('.dropify').dropify()</script>
-
-        {{-- <script src="../assets/js/google-maps.js"></script> --}}
+        <script>$('.dropify').dropify({
+            messages: {
+                'default': 'Masukkan tanda tangan',
+                'replace': 'Masukkan tanda tangan pennganti',
+                'remove':  'Hapus',
+                'error':   'Maaf, terjadi kesalahan.'
+            },
+            error: {
+                'fileSize': 'Ukuran terlalu besar (1 mb max).',
+                'minWidth': 'Gambar kurang lebar (200px min).',
+                'minHeight': 'Bambar kurang tinggi (200px min).',
+                'imageFormat': 'Format gambar tidak sesuai (png).',
+                'fileExtension': 'Format berkas tidak sesuai (hanya png).'
+            }
+        })</script>
 
         <script src="{{ asset('vendor/wow/wow.min.js') }}"></script>
 
