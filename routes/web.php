@@ -39,4 +39,5 @@ Route::middleware(['auth', 'student'])->group(function()
 Route::middleware(['auth', 'lecturer'])->group(function()
 {
     Route::get('/unsigned', [LecturerController::class, 'unsigned'])->name('unsigned');
+    Route::post('/sign', [LecturerController::class, 'sign'])->name('sign');
 });

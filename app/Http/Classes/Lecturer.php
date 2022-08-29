@@ -3,6 +3,8 @@
 namespace App\Http\Classes;
 
 use App\Models\Signature;
+use App\Models\SignatureDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +17,30 @@ class Lecturer {
                     return $query->select('id', 'fullname');
                 }
             ])
+            ->whereHas('signatureDetail', function($query){
+                return $query->where('signature', null);
+            })
             ->where('lecturer_id', Auth::user()->id)
             ->get();
         return $data;
+    }
+
+    public function sign(Request $request)
+    {
+        // dd($store);
+        $filename = time().'_'.$request->file('signature')->getClientOriginalName();
+        $request->file('signature')->storeAs('public/response', $filename);
+        $store = SignatureDetail::where('hash', $request->post('hash'))
+            ->update([
+                'signature' => 'public/response/'.$filename
+            ]);
+        return $store;
+        // $data = [
+        //     'po_id' => $request['po_id_pembayaran'],
+        //     'valid' => 9,
+        //     'nominal_bayar' => $request['jumlahBayarInput'],
+        //     'bukti_tf' => 'public/tagihan/'.$filename
+        // ];
+        
     }
 }
