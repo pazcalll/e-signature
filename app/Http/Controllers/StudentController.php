@@ -26,4 +26,10 @@ class StudentController extends Controller
     {
         return view("student.permohonan");
     }
+
+    public function getListPermohonan()
+    {
+        $data = Collector::Student()->getListPermohonan();
+        return datatables($data)->toJson();
+    }
 }

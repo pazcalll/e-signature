@@ -37,4 +37,20 @@ class Student {
         $lecturer = User::where('role', 2)->where('fullname', "like", "%".$request->q."%")->get();
         return response($lecturer, 200);
     }
+
+    public function getListPermohonan()
+    {
+        $data = Signature::with(['signatureDetail' => function($query){
+                    return $query->select('id', 'hash', 'note', 'signature');
+                }, 'student' => function($query){
+                    return $query->select('id', 'fullname');
+                }
+            ])
+            ->whereHas('signatureDetail', function($query){
+                return $query->where('signature', '!=', null);
+            })
+            ->where('student_id', Auth::user()->id)
+            ->get();
+        return $data;
+    }
 }

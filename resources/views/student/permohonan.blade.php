@@ -8,14 +8,15 @@
         </svg>
     </div>
     
-    <div class="row">
+    <div class="table-container">
+        <div class="row hidden"></div>
         <h1 class="mb-4">Daftar Permohonan Tanda Tangan</h1>
         <table class="table table-bordered data-striped">
             <thead>
                 <tr>
                     <td>No.</td>
                     <td>Waktu</td>
-                    <td>Hash</td>
+                    <td>Persetujuan</td>
                     <td>Keterangan</td>
                     <td>Tindakan</td>
                 </tr>
@@ -28,8 +29,81 @@
 </div>
 
 <script>
+
+    function listSignature() {
+        $('table').DataTable({
+            ajax: '{{route("get-list-permohonan")}}',
+            serverSide: true,
+            processing: true,
+            searching: false,
+            // scrollX: true,
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.10.9/i18n/Indonesian.json"
+            },
+            columnDefs: [
+                { width: '5%', targets: 0 },
+                { width: '15%', targets: 1 },
+                { width: '20%', targets: 2 },
+                { width: '30%', targets: 3 },
+                { width: '30%', targets: 4 },
+            ],
+            columns: [
+                {
+                    data: '',
+                    render: (data, type, row, meta) => {
+                        return meta.row + meta.settings._iDisplayStart + 1
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, full, meta) {
+                        return `
+                        <div style="word-break: break-all">
+                            ${data.created_at}
+                        </div>
+                        `
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, full, meta) {
+                        if (data.signature_detail.signature != "rejected") {
+                            return `
+                                <div class="text-success"><b>Disetujui</b></div>
+                            `
+                        }else{
+                            return `
+                                <div class="text-danger"><b>Ditolak</b></div>
+                            `
+                        }
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, full, meta) {
+                        return `
+                            ${data.signature_detail.note}
+                        `
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, full, meta) {
+                        let action = `
+                        <div style="display: flex">
+                            
+                        </div>
+                        `
+                        return action
+                    }
+                }
+            ]
+        })
+    }
+    listSignature()
+
     function listenerAction() {
-        document.querySelector('.row').style.display = "none"
+        document.querySelector('.table-container').style.display = "none"
         setTimeout(() => {
             document.querySelector('.svg').style.display = "block"
             document.querySelectorAll('.nav-item')[0].classList.add('active')

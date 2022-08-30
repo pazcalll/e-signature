@@ -36,6 +36,7 @@ Route::middleware(['auth', 'student'])->group(function()
     Route::post('/signature-req', [StudentController::class, 'signatureReq'])->name('signature-req');
     Route::get('/page-home', [StudentController::class, 'getHome'])->name('get-home');
     Route::get('/page-permohonan', [StudentController::class, 'getPermohonan'])->name('get-permohonan');
+    Route::get('/list-permohonan', [StudentController::class, 'getListPermohonan'])->name('get-list-permohonan');
     Route::get('/get-lecturer', [StudentController::class, 'getLecturer'])->name('get-lecturer');
 });
 Route::middleware(['auth', 'lecturer'])->group(function()
