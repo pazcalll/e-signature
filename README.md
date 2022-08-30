@@ -41,4 +41,6 @@ php artisan migrate:fresh
 php artisan serve
 ```
 
-8. Akses ```http://127.0.0.1:8000``` pada browser
+8. Buat 2 folder baru di dalam ```storage/app/public``` dengan nama ```personal ``` dan ```response```
+
+9. Akses ```http://127.0.0.1:8000``` pada browser
