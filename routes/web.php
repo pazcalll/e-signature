@@ -38,6 +38,7 @@ Route::middleware(['auth', 'student'])->group(function()
     Route::get('/page-permohonan', [StudentController::class, 'getPermohonan'])->name('get-permohonan');
     Route::get('/list-permohonan', [StudentController::class, 'getListPermohonan'])->name('get-list-permohonan');
     Route::get('/get-lecturer', [StudentController::class, 'getLecturer'])->name('get-lecturer');
+    Route::get('/get-img/{hash}', [StudentController::class, 'getImg'])->name('get-img');
 });
 Route::middleware(['auth', 'lecturer'])->group(function()
 {

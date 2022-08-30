@@ -53,4 +53,12 @@ class Student {
             ->get();
         return $data;
     }
+
+    public function getImg($hash)
+    {
+        $data = SignatureDetail::where('hash', $hash)
+            ->select('signature')
+            ->first();
+        return $data;
+    }
 }
