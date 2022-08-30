@@ -27,7 +27,6 @@ class Lecturer {
 
     public function sign(Request $request)
     {
-        // dd($store);
         $filename = time().'_'.$request->file('signature')->getClientOriginalName();
         $request->file('signature')->storeAs('public/response', $filename);
         $store = SignatureDetail::where('hash', $request->post('hash'))
@@ -35,12 +34,5 @@ class Lecturer {
                 'signature' => 'public/response/'.$filename
             ]);
         return $store;
-        // $data = [
-        //     'po_id' => $request['po_id_pembayaran'],
-        //     'valid' => 9,
-        //     'nominal_bayar' => $request['jumlahBayarInput'],
-        //     'bukti_tf' => 'public/tagihan/'.$filename
-        // ];
-        
     }
 }

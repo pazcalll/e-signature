@@ -16,4 +16,14 @@ class StudentController extends Controller
     {
         return Collector::Student()->getLecturer($request);
     }
+
+    public function getHome()
+    {
+        return view("student.index");
+    }
+
+    public function getPermohonan()
+    {
+        return view("student.permohonan");
+    }
 }
