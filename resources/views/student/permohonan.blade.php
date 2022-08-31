@@ -130,7 +130,7 @@
             success: (res) => {
                 document.querySelector(`#loading${count}`).style.display = "none";
                 document.querySelector(`#downloader${count}`).style.display = "flex";
-                // image.src = signature
+                image.src = "{{ asset('storage') }}/"+res.signature
                 // const canvas = document.querySelector("canvas")
                 // const ctx = canvas.getContext("2d");
                 console.log(res)

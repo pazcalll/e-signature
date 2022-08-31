@@ -31,7 +31,7 @@ class Lecturer {
         $request->file('signature')->storeAs('public/response', $filename);
         $store = SignatureDetail::where('hash', $request->post('hash'))
             ->update([
-                'signature' => 'public/response/'.$filename
+                'signature' => 'response/'.$filename
             ]);
         return $store;
     }
