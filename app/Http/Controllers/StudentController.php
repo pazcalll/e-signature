@@ -33,9 +33,14 @@ class StudentController extends Controller
         return datatables($data)->toJson();
     }
     
-    public function getImg($hash)
+    public function getImg(Request $request)
     {
-        $data = Collector::Student()->getImg($hash);
+        $data = Collector::Student()->getImg($request);
         return $data;
+    }
+
+    public function getValidity($hash)
+    {
+        dd($hash);
     }
 }

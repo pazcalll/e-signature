@@ -25,9 +25,7 @@
                 
             </tbody>
         </table>
-        <img src="" style="display: none; max-width: 700px; max-height:700" alt="Tanda Tangan Preview">
-        <div id="qrcode"></div>
-        <canvas width="1200" height="1200"></canvas>
+        <div class="img-container"></div>
     </div>
 </div>
 
@@ -70,13 +68,17 @@
                 {
                     data: null,
                     render: function(data, type, full, meta) {
-                        if (data.signature_detail.signature != "rejected") {
+                        if(data.signature_detail.signature == null){
                             return `
-                                <div class="text-success"><b>Disetujui</b></div>
+                                <div class="text-danger"><b>Belum Direspon</b></div>
                             `
-                        }else{
+                        }else if (data.signature_detail.signature == "rejected"){
                             return `
                                 <div class="text-danger"><b>Ditolak</b></div>
+                            `
+                        }else {
+                            return `
+                                <div class="text-success"><b>Disetujui</b></div>
                             `
                         }
                     }
@@ -110,6 +112,9 @@
                             </button>
                         </div>
                         `
+                        if (data.signature_detail.signature == null || data.signature_detail.signature == "rejected") {
+                            action = ''
+                        }
                         return action
                     }
                 }
@@ -119,21 +124,62 @@
     listSignature()
 
     function downloadSignature(hash, count) {
-        const image = document.querySelector('img')
         $.ajax({
-            url: `{{ url('/get-img') }}/${hash}`,
-            type: "GET",
+            url: `{{ url('/get-img') }}`,
+            type: "POST",
+            data: {
+                _token: '{{ csrf_token() }}',
+                hash: hash
+            },
             beforeSend: () => {
-                document.querySelector(`#downloader${count}`).style.display = "none";
-                document.querySelector(`#loading${count}`).style.display = "flex";
+                document.querySelector(`#downloader${count}`).style.display = "none"
+                document.querySelector(`#loading${count}`).style.display = "flex"
             },
             success: (res) => {
-                document.querySelector(`#loading${count}`).style.display = "none";
-                document.querySelector(`#downloader${count}`).style.display = "flex";
+                document.querySelector(".img-container").innerHTML = `
+                    <img id="sign-preview" src="" style="display: none; max-width: 700px; max-height:700" alt="Tanda Tangan Preview">
+                    <div id="qrcode" style="display: none"></div>
+                    <canvas id="sign-img" style="display: none" width="1200px" height="700px"></canvas>
+                `
+                const image = document.querySelector('#sign-preview')
                 image.src = "{{ asset('storage') }}/"+res.signature
-                // const canvas = document.querySelector("canvas")
-                // const ctx = canvas.getContext("2d");
-                console.log(res)
+                const canvas = document.querySelector("#sign-img")
+                const ctx = canvas.getContext("2d")
+                
+                setTimeout(() => {
+                    const width = image.width
+                    const height = image.height
+                    let rectangleSide = 200
+                    if (width > height) {
+                        rectangleSide = height
+                    } else{
+                        rectangleSide = width
+                    }
+                    ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
+                    const qrcode = new QRCode("qrcode", {
+                        text: hash,
+                        width: 300,
+                        height: 300,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.L
+                    })
+                    console.log(image.width, image.height)
+                    document.querySelector(`#loading${count}`).style.display = "none"
+                    document.querySelector(`#downloader${count}`).style.display = "flex"
+                    setTimeout(() => {
+                        ctx.drawImage( document.querySelector('#qrcode img'), 700, rectangleSide * 0.1, 300, 300)
+                        const data = canvas.toDataURL("image/png")
+                        // Create a link
+                        const aDownloadLink = document.createElement('a')
+                        // Add the name of the file to the link
+                        aDownloadLink.download = 'signature.png'
+                        // Attach the data to the link
+                        aDownloadLink.href = data
+                        // Get the code to click the download link
+                        aDownloadLink.click()
+                    }, 500)
+                }, 500)
             }
         })
     }
@@ -151,7 +197,7 @@
                     $('#main').html(res)
                 }
             })
-        }, 100);
+        }, 100)
         document.querySelectorAll('.nav-item')[0].removeEventListener("click", listenerAction)
     }
 

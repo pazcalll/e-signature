@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\Hash;
 
 class Student {
     public function signatureReq(Request $request)
@@ -17,7 +17,7 @@ class Student {
         DB::beginTransaction();
         
         $signature_detail = SignatureDetail::create([
-            'hash' => Hash::make(Carbon::now()->toDateTimeString()),
+            'hash' => md5(Carbon::now()->toDateTimeString()),
             'note' => $request->post('note')
         ]);
 
@@ -46,17 +46,14 @@ class Student {
                     return $query->select('id', 'fullname');
                 }
             ])
-            ->whereHas('signatureDetail', function($query){
-                return $query->where('signature', '!=', null);
-            })
             ->where('student_id', Auth::user()->id)
             ->get();
         return $data;
     }
 
-    public function getImg($hash)
+    public function getImg($request)
     {
-        $data = SignatureDetail::where('hash', $hash)
+        $data = SignatureDetail::where('hash', $request->post('hash'))
             ->select('signature')
             ->first();
         return $data;

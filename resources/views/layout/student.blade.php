@@ -28,6 +28,7 @@
         
         <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
 
+        <script src="{{ asset('js/qrcodejs/qrcode.js') }}"></script>
     </head>
     <body style="position: relative; min-height: 100vh;">
         <div style="padding-bottom: 2.5rem;">
