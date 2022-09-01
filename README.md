@@ -38,9 +38,14 @@ php artisan migrate:fresh
 
 7. Buat 2 folder baru di dalam ```storage/app/public``` dengan nama ```personal ``` dan ```response```.
 
-8. Jalankan perintah untuk membuat server local project.
+8. Untuk membuat folder storage bisa diakses dari aplikasi, jalankan perintah di bawah.
+```
+php artisan storage:link
+```
+
+9. Jalankan perintah untuk membuat server local project.
 ```
 php artisan serve
 ```
 
-9. Akses ```http://127.0.0.1:8000``` pada browser.
+10. Akses ```http://127.0.0.1:8000``` pada browser.

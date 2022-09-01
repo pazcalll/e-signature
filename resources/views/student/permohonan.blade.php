@@ -157,7 +157,7 @@
                     }
                     ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
                     const qrcode = new QRCode("qrcode", {
-                        text: hash,
+                        text: "{{ url('/get-validity') }}/"+hash,
                         width: 300,
                         height: 300,
                         colorDark : "#000000",
