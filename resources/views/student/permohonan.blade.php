@@ -164,7 +164,6 @@
                         colorLight : "#ffffff",
                         correctLevel : QRCode.CorrectLevel.L
                     })
-                    console.log(image.width, image.height)
                     document.querySelector(`#loading${count}`).style.display = "none"
                     document.querySelector(`#downloader${count}`).style.display = "flex"
                     setTimeout(() => {
