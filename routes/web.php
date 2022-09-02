@@ -33,9 +33,11 @@ Route::middleware('auth')->group(function ()
 });
 Route::middleware(['auth', 'student'])->group(function()
 {
+    Route::prefix('/student-page')->group(function(){
+        Route::get('/page-home', [StudentController::class, 'getHome'])->name('get-home-student');
+        Route::get('/page-permohonan', [StudentController::class, 'getPermohonan'])->name('get-permohonan-student');
+    });
     Route::post('/signature-req', [StudentController::class, 'signatureReq'])->name('signature-req');
-    Route::get('/page-home', [StudentController::class, 'getHome'])->name('get-home');
-    Route::get('/page-permohonan', [StudentController::class, 'getPermohonan'])->name('get-permohonan');
     Route::get('/list-permohonan', [StudentController::class, 'getListPermohonan'])->name('get-list-permohonan');
     Route::get('/get-lecturer', [StudentController::class, 'getLecturer'])->name('get-lecturer');
     Route::post('/get-img', [StudentController::class, 'getImg'])->name('get-img');
@@ -43,6 +45,11 @@ Route::middleware(['auth', 'student'])->group(function()
 });
 Route::middleware(['auth', 'lecturer'])->group(function()
 {
+    Route::prefix('/lecturer-page')->group(function(){
+        Route::get('/page-home', [LecturerController::class, 'getHome'])->name('get-home-lecturer');
+        Route::get('/page-history', [LecturerController::class, 'getHistory'])->name('get-history-lecturer');
+        Route::get('/signature-history', [LecturerController::class, 'signatureHistory'])->name('signature-history-lecturer');
+    });
     Route::get('/unsigned', [LecturerController::class, 'unsigned'])->name('unsigned');
     Route::post('/sign', [LecturerController::class, 'sign'])->name('sign');
 });

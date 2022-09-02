@@ -18,4 +18,17 @@ class LecturerController extends Controller
         $data = Collector::Lecturer()->sign($request);
         return response($data, 200);
     }
+    public function getHistory()
+    {
+        return view('lecturer.history');
+    }
+    public function getHome()
+    {
+        return view('lecturer.index');
+    }
+    public function signatureHistory()
+    {
+        $data = Collector::Lecturer()->signatureHistory();
+        return datatables($data)->toJson();
+    }
 }

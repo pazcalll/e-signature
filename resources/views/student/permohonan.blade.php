@@ -190,7 +190,7 @@
             document.querySelectorAll('.nav-item')[0].classList.add('active')
             document.querySelectorAll('.nav-item')[1].classList.remove('active')
             $.ajax({
-                url: "{{ route('get-home') }}",
+                url: "{{ route('get-home-student') }}",
                 type: "GET",
                 success: (res) => {
                     $('#main').html(res)

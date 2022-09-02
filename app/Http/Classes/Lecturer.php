@@ -35,4 +35,20 @@ class Lecturer {
             ]);
         return $store;
     }
+
+    public function signatureHistory()
+    {
+        $data = Signature::with(['signatureDetail' => function($query){
+                    return $query->select('id', 'hash', 'note');
+                }, 'student' => function($query){
+                    return $query->select('id', 'fullname');
+                }
+            ])
+            ->whereHas('signatureDetail', function($query){
+                return $query->where('signature', null)->orWhere('signature', '!=', null);
+            })
+            ->where('lecturer_id', Auth::user()->id)
+            ->get();
+        return $data;
+    }
 }

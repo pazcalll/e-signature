@@ -137,7 +137,7 @@
             document.querySelectorAll('.nav-item')[0].classList.remove('active')
             document.querySelectorAll('.nav-item')[1].classList.add('active')
             $.ajax({
-                url: "{{ route('get-permohonan') }}",
+                url: "{{ route('get-permohonan-student') }}",
                 type: "GET",
                 success: (res) => {
                     $('#main').html(res)
