@@ -38,9 +38,4 @@ class StudentController extends Controller
         $data = Collector::Student()->getImg($request);
         return $data;
     }
-
-    public function getValidity($hash)
-    {
-        dd($hash);
-    }
 }

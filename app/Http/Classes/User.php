@@ -2,6 +2,7 @@
 
 namespace App\Http\Classes;
 
+use App\Models\Signature;
 use App\Models\User as AppUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class User {
+
+    public function getVerificationQrcode($hash)
+    {
+        $data = Signature::with(['signatureDetail' => function($query){
+                    return $query->select('id', 'hash', 'note');
+                }, 'student' => function($query)
+                {
+                    return $query->select('id', 'fullname');
+                }, 'lecturer' => function($query)
+                {
+                    return $query->select('id', 'fullname');
+                }
+            ])
+            ->whereHas('signatureDetail', function($query) use($hash){
+                return $query->where('hash', $hash);
+            })
+            ->first();
+        $view = view('public.validator')->with('data', $data);
+        return $view;
+    }
 
     public function authenticate(Request $request)
     {

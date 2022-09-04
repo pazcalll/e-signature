@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/', [AuthController::class, 'index'])->name('index');
+
 Route::middleware('guest')->group(function()
 {
     Route::get('/login', [AuthController::class, 'loginPage']);
@@ -27,10 +28,12 @@ Route::middleware('guest')->group(function()
     Route::get('/register', [AuthController::class, 'registerPage']);
     Route::post('/register', [AuthController::class, 'register']);
 });
+
 Route::middleware('auth')->group(function ()
 {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
 Route::middleware(['auth', 'student'])->group(function()
 {
     Route::prefix('/student-page')->group(function(){
@@ -43,6 +46,7 @@ Route::middleware(['auth', 'student'])->group(function()
     Route::post('/get-img', [StudentController::class, 'getImg'])->name('get-img');
     Route::get('/get-validity/{hash}', [StudentController::class, 'getValidity'])->name('get-validity');
 });
+
 Route::middleware(['auth', 'lecturer'])->group(function()
 {
     Route::prefix('/lecturer-page')->group(function(){
@@ -52,4 +56,9 @@ Route::middleware(['auth', 'lecturer'])->group(function()
     });
     Route::get('/unsigned', [LecturerController::class, 'unsigned'])->name('unsigned');
     Route::post('/sign', [LecturerController::class, 'sign'])->name('sign');
+});
+
+Route::prefix('/verification')->group(function()
+{
+    Route::get('/qrcode/{hash}', [AuthController::class, 'getVerificationQrcode']);
 });
