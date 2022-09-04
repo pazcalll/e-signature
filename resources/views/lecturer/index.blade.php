@@ -33,7 +33,7 @@
             $(".dropify-clear").trigger("click")
             $('.modal').modal('show')
         }
-        $('table').DataTable({
+        var dt = $('table').DataTable({
             ajax: '{{route("unsigned")}}',
             serverSide: true,
             processing: true,
@@ -149,6 +149,22 @@
 </div>
 
 <script>
+    $('.dropify').dropify({
+        messages: {
+            'default': 'Masukkan tanda tangan',
+            'replace': 'Masukkan tanda tangan pennganti',
+            'remove':  'Hapus',
+            'error':   'Maaf, terjadi kesalahan.'
+        },
+        error: {
+            'fileSize': 'Ukuran terlalu besar (1 mb max).',
+            'minWidth': 'Gambar kurang lebar (200px min).',
+            'minHeight': 'Bambar kurang tinggi (200px min).',
+            'imageFormat': 'Format gambar tidak sesuai (png).',
+            'fileExtension': 'Format berkas tidak sesuai (hanya png).'
+        }
+    })
+
     $('form').on('submit', function(event) {
         event.preventDefault()
         let fd = new FormData(this);
@@ -162,8 +178,8 @@
             data: fd,
             success: (res) => {
                 console.log(res)
-                $('modal').modal('hide')
-                $('modal').on('hidden.bs.modal', function (e) {
+                $('.modal').modal('hide')
+                $('.modal').on('hidden.bs.modal', function (e) {
                     $(':input','form')
                         .not(':button, :submit, :reset, input[name="_token"]')
                         .val(null)
@@ -172,6 +188,15 @@
                     $('#hash').val(hash)
                     $(".dropify-clear").trigger("click")
                 })
+                Toastify({
+                    text: "Permohonan telah dikonfirmasi",
+                    duration: 3000,
+                    className: "info",
+                    style: {
+                        background: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }
+                }).showToast()
+				dt.ajax.reload()
             }
         })
     })

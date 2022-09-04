@@ -39,7 +39,7 @@ class Lecturer {
     public function signatureHistory()
     {
         $data = Signature::with(['signatureDetail' => function($query){
-                    return $query->select('id', 'hash', 'note');
+                    return $query->select('id', 'hash', 'note', 'signature');
                 }, 'student' => function($query){
                     return $query->select('id', 'fullname');
                 }
