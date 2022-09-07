@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class User {
 
@@ -34,8 +35,16 @@ class User {
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'userid' => ['required'],
-            'password' => ['required'],
+            'userid' => ['required', 'min:4', 'max:16'],
+            'password' => ['required', 'min:8', 'max:24']
+        ],
+        [
+            'userid.required' => 'User ID tidak boleh kosong',
+            'userid.min' => 'User ID minimal 8 digit',
+            'userid.max' => 'User ID maximal 16 digit',
+            'password.required' => 'Password tidak boleh kosong',
+            'password.min' => 'Password anda kurang dari 8 digit',
+            'password.max' => 'Password anda kurang dari 24 digit',
         ]);
         
         try {
@@ -43,8 +52,7 @@ class User {
                 $request->session()->regenerate();
                 return redirect()->back();
             }
-            dd(Auth::attempt($credentials));
-     
+            return response(["errors"=>Auth::attempt($credentials)], 422);
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -52,24 +60,40 @@ class User {
 
     public function register(Request $request)
     {
-        $credentials = $request->validate([
-            'fullname' => ['required'],
+        $rules = [
+            'fullname' => ['required', 'max:255'],
             'role' => ['required'],
-            'userid' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-            'c_password' => ['required']
-        ]);
-
+            'userid' => ['required', 'unique:users', 'min:4', 'max:16'],
+            'password' => ['required', 'min:8', 'max:24'],
+            'email' => ['required', 'email', 'unique:users', 'min:8', 'max:32'],
+            'c_password' => ['required', 'min:8', 'max:24', 'same:password']
+        ];
+        $messages = [
+            'userid.required' => 'User ID tidak boleh kosong.',
+            'userid.min' => 'User ID minimal 8 digit.',
+            'userid.max' => 'User ID maximal 16 digit.',
+            'userid.unique' => 'User ID telah dipakai.',
+            'password.required' => 'Password tidak boleh kosong.',
+            'password.min' => 'Password anda tidak boleh kurang dari 8 digit.',
+            'password.max' => 'Password anda tidak boleh lebih dari 24 digit.',
+            'c_password.required' => 'Konfirmasi kata sandi tidak boleh kosong.',
+            'c_password.min' => 'Konfirmasi kata sandi anda tidak boleh kurang dari 8 digit.',
+            'c_password.max' => 'Konfirmasi kata sandi anda tidak boleh lebih dari 24 digit.',
+            'c_password.same' => 'Kata sandi tidak sama dengan konfirmasi.',
+            'email.required' => 'E-mail tidak boleh kosong.',
+            'email.min' => 'E-mail anda kurang dari 8 digit.',
+            'email.max' => 'E-mail anda lebih dari 24 digit.',
+            'email.unique' => 'E-mail telah dipakai.',
+            'fullname.required' => 'Nama lengkap pengguna tidak boleh kosong.',
+            'fullname.max' => 'Nama lengkap anda tidak boleh lebih dari 255 digit.',
+            'role.required' => 'Peran pengguna tidak boleh kosong.'
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
+            return response($validator->validate(), 400);
+        }
         try {
             DB::beginTransaction();
-            if (AppUser::where('email', $request['email'])->orWhere('userid', $request['userid'])->first()) {
-                return back()->withErrors([
-                    'message' => 'Pengguna ini sudah ada.',
-                ]);
-            }else if ($request['password'] != $request['c_password']) {
-                return back()->withErrors('Password berbeda dengan konfirmasi, silakan cek lagi.');
-            }
             $newUser = AppUser::create([
                 'fullname' => $request['fullname'],
                 'userid' => $request['userid'],
@@ -79,9 +103,13 @@ class User {
             ]);
             // dd($newUser);
             DB::commit();
-            return $this->authenticate($request);
+            // dd("TRUE");
+            if (Auth::attempt($request)) {
+                $request->session()->regenerate();
+                // return redirect()->back();
+            }
         } catch (\Throwable $th) {
-            dd($th);
+            return response($th, 400);
         }
     }
 
