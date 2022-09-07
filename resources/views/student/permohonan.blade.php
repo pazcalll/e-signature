@@ -16,6 +16,7 @@
                 <tr>
                     <td>No.</td>
                     <td>Waktu</td>
+                    <td>Dosen</td>
                     <td>Status</td>
                     <td>Keterangan</td>
                     <td>Tindakan</td>
@@ -43,10 +44,11 @@
             },
             columnDefs: [
                 { width: '5%', targets: 0 },
-                { width: '15%', targets: 1 },
-                { width: '20%', targets: 2 },
-                { width: '30%', targets: 3 },
+                { width: '10%', targets: 1 },
+                { width: '15%', targets: 2 },
+                { width: '10%', targets: 3 },
                 { width: '30%', targets: 4 },
+                { width: '20%', targets: 5 },
             ],
             columns: [
                 {
@@ -63,6 +65,12 @@
                             ${data.created_at}
                         </div>
                         `
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, full, meta) {
+                        return `${data.lecturer.fullname}`
                     }
                 },
                 {
@@ -139,12 +147,21 @@
                 document.querySelector(".img-container").innerHTML = `
                     <img id="sign-preview" src="" style="display: none; max-width: 700px; max-height:700" alt="Tanda Tangan Preview">
                     <div id="qrcode" style="display: none"></div>
-                    <canvas id="sign-img" style="display: none" width="1200px" height="700px"></canvas>
+                    <canvas id="sign-img" style="display: none" width="1100px" height="700px"></canvas>
                 `
                 const image = document.querySelector('#sign-preview')
-                image.src = "{{ asset('storage') }}/"+res.signature
                 const canvas = document.querySelector("#sign-img")
                 const ctx = canvas.getContext("2d")
+
+                image.onload = function() {
+                    var canvasHeight = image.height * (700/image.width)
+                    if (parseFloat(canvasHeight) > parseFloat(310)) {
+                        canvas.height = canvasHeight
+                    }else{
+                        canvas.height = 700
+                    }
+                }
+                image.src = "{{ asset('storage') }}/"+res.signature
                 
                 setTimeout(() => {
                     const width = image.width
@@ -155,14 +172,19 @@
                     } else{
                         rectangleSide = width
                     }
-                    ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
+
+                    if (height > width) {
+                        ctx.drawImage( image, 0, 0, image.height * (700/image.width), 700)
+                    } else {
+                        ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
+                    }
                     const qrcode = new QRCode("qrcode", {
                         text: "{{ url('/get-validity') }}/"+hash,
-                        width: 300,
-                        height: 300,
+                        width: rectangleSide,
+                        height: rectangleSide,
                         colorDark : "#000000",
                         colorLight : "#ffffff",
-                        correctLevel : QRCode.CorrectLevel.L
+                        correctLevel : QRCode.CorrectLevel.H
                     })
                     document.querySelector(`#loading${count}`).style.display = "none"
                     document.querySelector(`#downloader${count}`).style.display = "flex"

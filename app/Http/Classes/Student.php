@@ -42,11 +42,12 @@ class Student {
     {
         $data = Signature::with(['signatureDetail' => function($query){
                     return $query->select('id', 'hash', 'note', 'signature');
-                }, 'student' => function($query){
+                }, 'lecturer' => function($query){
                     return $query->select('id', 'fullname');
                 }
             ])
             ->where('student_id', Auth::user()->id)
+            ->select('id', 'lecturer_id', 'signature_detail_id', 'created_at', 'updated_at')
             ->get();
         return $data;
     }

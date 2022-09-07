@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-sm-6 col-md-7 intro-section">
                 <div class="brand-wrapper">
-                    <h1><a href="https://stackfindover.com/">E-Signature</a></h1>
+                    <h1><a href="{{ route('index') }}">E-Signature</a></h1>
                 </div>
                 <div class="intro-content-wrapper">
                     <h1 class="intro-title">Selamat datang di E-Signature !</h1>
