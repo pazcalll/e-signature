@@ -83,11 +83,7 @@
                         }
                         else if(data.signature_detail.signature == null){
                             return `
-                                <div class="text-danger"><b>Belum Direspon</b></div>
-                            `
-                        }else if (data.signature_detail.signature == "rejected"){
-                            return `
-                                <div class="text-danger"><b>Ditolak</b></div>
+                                <div class="text-warning"><b>Belum Direspon</b></div>
                             `
                         }else {
                             return `

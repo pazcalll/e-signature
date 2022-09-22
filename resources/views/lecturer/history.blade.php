@@ -117,7 +117,7 @@
                             `
                         }else if(data.signature_detail.signature == null){
                             return `
-                                <div class="text-danger"><b>Belum Direspon</b></div>
+                                <div class="text-warning"><b>Belum Direspon</b></div>
                             `
                         }else {
                             return `
