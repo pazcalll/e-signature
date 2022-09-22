@@ -18,7 +18,7 @@ class Lecturer {
                 }
             ])
             ->whereHas('signatureDetail', function($query){
-                return $query->where('signature', null);
+                return $query->where('signature', null)->where("deleted_at", null);
             })
             ->where('lecturer_id', Auth::user()->id)
             ->get();
@@ -36,10 +36,17 @@ class Lecturer {
         return $store;
     }
 
+    public function signDelete(Request $request)
+    {
+        $sign = SignatureDetail::where('hash', $request->hash);
+        $result = $sign->delete();
+        return $result;
+    }
+
     public function signatureHistory()
     {
         $data = Signature::with(['signatureDetail' => function($query){
-                    return $query->select('id', 'hash', 'note', 'signature');
+                    return $query->select('id', 'hash', 'note', 'signature', 'deleted_at');
                 }, 'student' => function($query){
                     return $query->select('id', 'fullname');
                 }

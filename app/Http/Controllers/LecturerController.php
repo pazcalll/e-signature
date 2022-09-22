@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Classes\Collector;
+use Symfony\Component\HttpFoundation\Response;
 
 class LecturerController extends Controller
 {
@@ -16,6 +17,11 @@ class LecturerController extends Controller
     public function sign(Request $request)
     {
         $data = Collector::Lecturer()->sign($request);
+        return response($data, 200);
+    }
+    public function signDelete(Request $request)
+    {
+        $data = Collector::Lecturer()->signDelete($request);
         return response($data, 200);
     }
     public function getHistory()

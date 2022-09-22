@@ -76,7 +76,12 @@
                 {
                     data: null,
                     render: function(data, type, full, meta) {
-                        if(data.signature_detail.signature == null){
+                        if (data.signature_detail.deleted_at != null) {
+                            return `
+                                <div class="text-danger"><b>Ditolak</b></div>
+                            `
+                        }
+                        else if(data.signature_detail.signature == null){
                             return `
                                 <div class="text-danger"><b>Belum Direspon</b></div>
                             `
@@ -120,7 +125,7 @@
                             </button>
                         </div>
                         `
-                        if (data.signature_detail.signature == null || data.signature_detail.signature == "rejected") {
+                        if (data.signature_detail.signature == null || data.signature_detail.deleted_at != null) {
                             action = ''
                         }
                         return action

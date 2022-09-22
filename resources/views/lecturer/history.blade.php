@@ -111,19 +111,20 @@
                 {
                     data: null,
                     render: (data, type, full, meta) => {
-                        if(data.signature_detail.signature == null){
-                            return `
-                                <div class="text-danger"><b>Belum Direspon</b></div>
-                            `
-                        }else if (data.signature_detail.signature == "rejected"){
+                        if (data.signature_detail.deleted_at != null){
                             return `
                                 <div class="text-danger"><b>Ditolak</b></div>
+                            `
+                        }else if(data.signature_detail.signature == null){
+                            return `
+                                <div class="text-danger"><b>Belum Direspon</b></div>
                             `
                         }else {
                             return `
                                 <div class="text-success"><b>Disetujui</b></div>
                             `
                         }
+                        return ''
                     }
                 },
                 {
@@ -150,7 +151,9 @@
                     data: null,
                     render: function(data, type, full, meta) {
                         let action = ''
-                        if (data.signature_detail.signature != null) {
+                        if (data.signature_detail.deleted_at != null){
+                            return ``
+                        }else if (data.signature_detail.signature != null) {
                             action = ''
                         }else {
                             action = `

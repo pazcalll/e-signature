@@ -56,6 +56,7 @@ Route::middleware(['auth', 'lecturer'])->group(function()
     });
     Route::get('/unsigned', [LecturerController::class, 'unsigned'])->name('unsigned');
     Route::post('/sign', [LecturerController::class, 'sign'])->name('sign');
+    Route::delete('/sign/delete', [LecturerController::class, 'signDelete'])->name('sign-delete');
 });
 
 Route::prefix('/verification')->group(function()

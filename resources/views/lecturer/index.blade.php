@@ -31,7 +31,11 @@
                 .prop('selected', false)
             $('#hash').val(hash)
             $(".dropify-clear").trigger("click")
-            $('.modal').modal('show')
+            $('.modal-sign').modal('show')
+        }
+        function deleteModal(id) {
+            $('#inp-delete').val(id)
+            $('.modal-delete').modal('show')
         }
         var dt = $('table').DataTable({
             ajax: '{{route("unsigned")}}',
@@ -95,7 +99,7 @@
                                 <i class="mai mai-pencil"></i>
                                 Tanda Tangani
                             </button>
-                            <button type="button" class="btn-danger btn-sm">
+                            <button onclick=deleteModal("${data.signature_detail.hash}") type="button" class="btn-danger btn-sm">
                                 <i class="mai mai-trash-bin"></i>
                                 Tolak
                             </button>
@@ -110,7 +114,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade mt-5" style="" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-sign fade mt-5" style="" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -144,6 +148,27 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-delete fade mt-5" style="" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Form Masukan Tanda Tangan Digital</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <input type="hidden" id="inp-delete">
+            <div class="modal-body">
+                Apakah anda yakin ingin menolak permohonan tanda tangan ini?
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btn-decline">Kirim</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -197,6 +222,41 @@
                     }
                 }).showToast()
 				dt.ajax.reload()
+            }
+        })
+    })
+
+    $('.btn-decline').on('click', function() {
+        $.ajax({
+            url: "{{ route('sign-delete') }}",
+            type: "DELETE",
+            data: {
+                _token: "{{ csrf_token() }}",
+                hash: `${$('#inp-delete').val()}`
+            },
+            success: function (res) {
+                if (res == 1) {
+                    Toastify({
+                        text: "Tanda tangan telah ditolak",
+                        duration: 3000,
+                        className: "info",
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }
+                    }).showToast()
+                    dt.ajax.reload()
+                }
+                else{
+                    Toastify({
+                        text: "Aksi Gagal",
+                        duration: 3000,
+                        className: "error",
+                        style: {
+                            background: "#ff0000",
+                        }
+                    }).showToast()
+                }
+                $('.modal-delete').modal("hide")
             }
         })
     })
