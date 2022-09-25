@@ -16,7 +16,7 @@ class CreateSignatureTable extends Migration
         Schema::create('signatures', function (Blueprint $table) {
             $table->integer("id")->autoIncrement();
             $table->integer("signature_detail_id")->nullable();
-            $table->foreign("signature_detail_id")->references('id')->on('SignatureDetails')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign("signature_detail_id")->references('id')->on('signature_details')->onUpdate('cascade')->onDelete('cascade');
             $table->integer("lecturer_id")->nullable();
             $table->foreign("lecturer_id")->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->integer("student_id")->nullable();
