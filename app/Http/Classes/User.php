@@ -103,11 +103,15 @@ class User {
             ]);
             // dd($newUser);
             DB::commit();
-            // dd("TRUE");
-            if (Auth::attempt($request)) {
+            $credentials = [
+                'userid' => $request->post('userid'),
+                'password' => $request->post('password')
+            ];
+            if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-                // return redirect()->back();
+                return redirect()->back();
             }
+            return redirect()->back();
         } catch (\Throwable $th) {
             return response($th, 400);
         }

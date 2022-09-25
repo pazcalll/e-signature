@@ -78,8 +78,7 @@
             type: "POST",
             data: $(this).serialize(),
             success: (res) => {
-                // window.location.reload()
-                console.log(res)
+                window.location.reload()
             }, 
             error: (err) => {
                 err = err.responseJSON.errors
