@@ -3,6 +3,7 @@
 namespace App\Http\Classes;
 
 use App\Models\Signature;
+use App\Models\SignatureDetail;
 use App\Models\User as AppUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,14 @@ class User {
             ->first();
         $view = view('public.validator')->with('data', $data);
         return $view;
+    }
+
+    public function getImg($request)
+    {
+        $data = SignatureDetail::where('hash', $request->post('hash'))
+            ->select('signature')
+            ->first();
+        return $data;
     }
 
     public function authenticate(Request $request)

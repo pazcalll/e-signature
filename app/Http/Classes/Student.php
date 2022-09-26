@@ -52,11 +52,4 @@ class Student {
         return $data;
     }
 
-    public function getImg($request)
-    {
-        $data = SignatureDetail::where('hash', $request->post('hash'))
-            ->select('signature')
-            ->first();
-        return $data;
-    }
 }

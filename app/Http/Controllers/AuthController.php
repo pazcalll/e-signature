@@ -49,4 +49,10 @@ class AuthController extends Controller
         return Collector::User()->getVerificationQrcode($hash);
     }
 
+    public function getImg(Request $request)
+    {
+        $data = Collector::User()->getImg($request);
+        return $data;
+    }
+
 }

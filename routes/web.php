@@ -32,6 +32,7 @@ Route::middleware('guest')->group(function()
 Route::middleware('auth')->group(function ()
 {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/get-img', [AuthController::class, 'getImg'])->name('get-img');
 });
 
 Route::middleware(['auth', 'student'])->group(function()
@@ -43,7 +44,6 @@ Route::middleware(['auth', 'student'])->group(function()
     Route::post('/signature-req', [StudentController::class, 'signatureReq'])->name('signature-req');
     Route::get('/list-permohonan', [StudentController::class, 'getListPermohonan'])->name('get-list-permohonan');
     Route::get('/get-lecturer', [StudentController::class, 'getLecturer'])->name('get-lecturer');
-    Route::post('/get-img', [StudentController::class, 'getImg'])->name('get-img');
     Route::get('/get-validity/{hash}', [StudentController::class, 'getValidity'])->name('get-validity');
 });
 
