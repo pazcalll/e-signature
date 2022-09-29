@@ -29,6 +29,7 @@ class User {
                 return $query->where('hash', $hash);
             })
             ->first();
+            // dd($data->toArray());
         $view = view('public.validator')->with('data', $data);
         return $view;
     }

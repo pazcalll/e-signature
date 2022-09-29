@@ -236,52 +236,56 @@
 
                     image.onload = function() {
                         var canvasHeight = image.height * (700/image.width)
-                        if (parseFloat(canvasHeight) > parseFloat(310)) {
+                        // console.log(image.height+ " " + image.width+" "+canvasHeight)
+                        if (parseFloat(canvasHeight) > parseFloat(350)) {
                             canvas.height = canvasHeight
                         }else{
-                            canvas.height = 700
+                            canvas.height = 350
                         }
+
+                        setTimeout(() => {
+                            const width = image.width
+                            const height = image.height
+                            let rectangleSide = 200
+                            if (width > height) {
+                                rectangleSide = height
+                            } else{
+                                rectangleSide = width
+                            }
+
+                            if (height > width) {
+                                ctx.drawImage( image, 0, 0, image.height * (700/image.width), 700)
+                            } else {
+                                ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
+                            }
+                            const qrcode = new QRCode("qrcode", {
+                                text: "{{ url('/verification/qrcode') }}/"+hash,
+                                width: rectangleSide,
+                                height: rectangleSide,
+                                colorDark : "#000000",
+                                colorLight : "#ffffff",
+                                correctLevel : QRCode.CorrectLevel.H
+                            })
+                            document.querySelector(`#loading${count}`).style.display = "none"
+                            document.querySelector(`#downloader${count}`).style.display = "flex"
+                            setTimeout(() => {
+                                // canvas set draw image (elementSelector, distance_from_leftside_canvas, distance_from_topside_canvas, qrcode_height, qrcode_width)
+                                ctx.drawImage( document.querySelector('#qrcode img'), 700, canvas.height * 0.1, 300, 300)
+                                const data = canvas.toDataURL("image/png")
+                                // Create a link
+                                const aDownloadLink = document.createElement('a')
+                                // Add the name of the file to the link
+                                aDownloadLink.download = 'signature.png'
+                                // Attach the data to the link
+                                aDownloadLink.href = data
+                                // Get the code to click the download link
+                                aDownloadLink.click()
+                                // console.log(canvas.height * 0.1)
+                            }, 500)
+                        }, 500)
                     }
                     image.src = "{{ asset('storage') }}/"+res.signature
                     
-                    setTimeout(() => {
-                        const width = image.width
-                        const height = image.height
-                        let rectangleSide = 200
-                        if (width > height) {
-                            rectangleSide = height
-                        } else{
-                            rectangleSide = width
-                        }
-
-                        if (height > width) {
-                            ctx.drawImage( image, 0, 0, image.height * (700/image.width), 700)
-                        } else {
-                            ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
-                        }
-                        const qrcode = new QRCode("qrcode", {
-                            text: "{{ url('/get-verification') }}/"+hash,
-                            width: rectangleSide,
-                            height: rectangleSide,
-                            colorDark : "#000000",
-                            colorLight : "#ffffff",
-                            correctLevel : QRCode.CorrectLevel.H
-                        })
-                        document.querySelector(`#loading${count}`).style.display = "none"
-                        document.querySelector(`#downloader${count}`).style.display = "flex"
-                        setTimeout(() => {
-                            ctx.drawImage( document.querySelector('#qrcode img'), 700, rectangleSide * 0.1, 300, 300)
-                            const data = canvas.toDataURL("image/png")
-                            // Create a link
-                            const aDownloadLink = document.createElement('a')
-                            // Add the name of the file to the link
-                            aDownloadLink.download = 'signature.png'
-                            // Attach the data to the link
-                            aDownloadLink.href = data
-                            // Get the code to click the download link
-                            aDownloadLink.click()
-                        }, 500)
-                    }, 500)
                 },
                 error: (err) => {
                     console.log(hash)
