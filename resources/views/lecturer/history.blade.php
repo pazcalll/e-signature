@@ -67,7 +67,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Form Masukan Tanda Tangan Digital</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">Form Penolakan Permohonan Tanda Tangan Digital</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -77,7 +77,7 @@
                     Apakah anda yakin ingin menolak permohonan tanda tangan ini?
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary btn-decline">Kirim</button>
+                        <button type="submit" class="btn btn-primary btn-decline">Tolak Permohonan</button>
                     </div>
                 </div>
             </div>
@@ -260,7 +260,7 @@
                             ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
                         }
                         const qrcode = new QRCode("qrcode", {
-                            text: "{{ url('/get-validity') }}/"+hash,
+                            text: "{{ url('/get-verification') }}/"+hash,
                             width: rectangleSide,
                             height: rectangleSide,
                             colorDark : "#000000",

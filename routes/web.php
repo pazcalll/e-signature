@@ -44,7 +44,6 @@ Route::middleware(['auth', 'student'])->group(function()
     Route::post('/signature-req', [StudentController::class, 'signatureReq'])->name('signature-req');
     Route::get('/list-permohonan', [StudentController::class, 'getListPermohonan'])->name('get-list-permohonan');
     Route::get('/get-lecturer', [StudentController::class, 'getLecturer'])->name('get-lecturer');
-    Route::get('/get-validity/{hash}', [StudentController::class, 'getValidity'])->name('get-validity');
 });
 
 Route::middleware(['auth', 'lecturer'])->group(function()
@@ -61,5 +60,5 @@ Route::middleware(['auth', 'lecturer'])->group(function()
 
 Route::prefix('/verification')->group(function()
 {
-    Route::get('/qrcode/{hash}', [AuthController::class, 'getVerificationQrcode']);
+    Route::get('/qrcode/{hash}', [AuthController::class, 'getVerificationQrcode'])->name('get-verification');
 });
