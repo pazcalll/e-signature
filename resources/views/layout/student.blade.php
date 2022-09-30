@@ -28,7 +28,7 @@
 
         <script src="{{ asset('js/qrcodejs/qrcode.js') }}"></script>
     </head>
-    <body style="position: relative; min-height: 120vh;">
+    <body style="position: relative; min-height: 150vh;">
         <div style="padding-bottom: 2.5rem;">
             <header>
                 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">

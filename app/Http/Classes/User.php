@@ -26,7 +26,7 @@ class User {
                 }
             ])
             ->whereHas('signatureDetail', function($query) use($hash){
-                return $query->where('hash', $hash);
+                return $query->where('hash', $hash)->where('signature', '!=', null);
             })
             ->first();
             // dd($data->toArray());
