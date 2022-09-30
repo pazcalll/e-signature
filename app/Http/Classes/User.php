@@ -73,7 +73,7 @@ class User {
         $rules = [
             'fullname' => ['required', 'max:255'],
             'role' => ['required'],
-            'userid' => ['required', 'unique:users', 'min:4', 'max:16'],
+            'userid' => ['required', 'unique:users', 'min:4', 'max:16', 'alpha_dash'],
             'password' => ['required', 'min:8', 'max:24'],
             'email' => ['required', 'email', 'unique:users', 'min:8', 'max:32'],
             'c_password' => ['required', 'min:8', 'max:24', 'same:password']
@@ -83,6 +83,7 @@ class User {
             'userid.min' => 'User ID minimal 8 digit.',
             'userid.max' => 'User ID maximal 16 digit.',
             'userid.unique' => 'User ID telah dipakai.',
+            'userid.alpha_dash' => 'User ID hanya boleh mengandung huruf, angka, hyphen, dan underscore.',
             'password.required' => 'Password tidak boleh kosong.',
             'password.min' => 'Password anda tidak boleh kurang dari 8 digit.',
             'password.max' => 'Password anda tidak boleh lebih dari 24 digit.',
