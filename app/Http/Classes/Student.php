@@ -9,6 +9,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+// use EllipticCurve\Ecdsa;
+// use EllipticCurve\Curve;
+use EllipticCurve\PrivateKey;
 // use Illuminate\Support\Facades\Hash;
 
 class Student {
@@ -16,8 +19,13 @@ class Student {
     {
         DB::beginTransaction();
         
+        $privateKey = new PrivateKey();
+        
         $signature_detail = SignatureDetail::create([
             'hash' => md5(Carbon::now()->toDateTimeString()),
+            'private_key' => $privateKey->toString(),
+            'public_key' => $privateKey->publicKey()->toString(),
+            'signature' => null,
             'note' => $request->post('note')
         ]);
 

@@ -11,6 +11,7 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "starkbank/ecdsa": "^2.0",
         "yajra/laravel-datatables-oracle": "^9.21.2"
     },
     "require-dev": {

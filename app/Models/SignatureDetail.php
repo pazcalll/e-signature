@@ -10,10 +10,10 @@ class SignatureDetail extends Model
 {
     use SoftDeletes;
     use HasFactory;
-    protected $fillable = ['hash', 'note', 'signature', 'qrcode'];
+    protected $fillable = ['hash', 'private_key', 'public_key', 'signature_key', 'note', 'signature', 'qrcode'];
 
-    // public function signature()
-    // {
-    //     return $this->belongsTo(Signature::class);
-    // }
+    public function signature()
+    {
+        return $this->belongsTo(Signature::class, 'id', 'signature_detail_id');
+    }
 }

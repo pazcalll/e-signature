@@ -49,3 +49,7 @@ php artisan serve
 ```
 
 10. Akses ```http://127.0.0.1:8000``` pada browser.
+
+11. Pastikan untuk server tempat menyimpan database adalah dijalankan dengan bantuan control panel dari XAMPP minimal versi v3.3.0 keluaran 6 April 2021.
+
+12. Ketika server database sudah dijalankan, buka berkas dengan nama "php.ini" pada config modul Apache dan hapus tanda titik koma atau semicolon pada ``` ;extension=gmp ``` menjadi ```extension=gmp``` kemudian simpan
