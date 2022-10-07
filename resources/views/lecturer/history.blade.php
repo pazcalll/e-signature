@@ -85,13 +85,13 @@
     </div>
 
     <script>
-        function openModal(public_key) {
+        function openModal(hash) {
             $(':input','form')
                 .not(':button, :submit, :reset, input[name="_token"]')
                 .val(null)
                 .prop('checked', false)
                 .prop('selected', false)
-            $('#public_key').val(public_key)
+            $('#hash').val(hash)
             $(".dropify-clear").trigger("click")
             $('.modal-sign').modal('show')
         }
@@ -196,11 +196,11 @@
                         }else {
                             action = `
                             <div style="display: flex">
-                                <button onclick=openModal("${data.signature_detail.public_key}") style="margin-right: 10px" type="button" class="btn-primary btn-sm">
+                                <button onclick=openModal("${data.signature_detail.hash}") style="margin-right: 10px" type="button" class="btn-primary btn-sm">
                                     <i class="mai mai-pencil"></i>
                                     Tanda Tangani
                                 </button>
-                                <button onclick=deleteModal("${data.signature_detail.public_key}") type="button" class="btn-danger btn-sm">
+                                <button onclick=deleteModal("${data.signature_detail.hash}") type="button" class="btn-danger btn-sm">
                                     <i class="mai mai-trash-bin"></i>
                                     Tolak
                                 </button>

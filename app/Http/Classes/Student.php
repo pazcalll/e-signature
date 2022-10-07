@@ -49,7 +49,7 @@ class Student {
     public function getListPermohonan()
     {
         $data = Signature::with(['signatureDetail' => function($query){
-                    return $query->select('id', 'hash', 'note', 'signature', 'deleted_at');
+                    return $query->select('id', 'hash', 'public_key', 'private_key', 'signature_key', 'note', 'signature', 'deleted_at');
                 }, 'lecturer' => function($query){
                     return $query->select('id', 'fullname');
                 }
