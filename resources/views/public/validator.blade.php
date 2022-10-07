@@ -18,8 +18,8 @@
     <script src="{{ asset('js/qrcodejs/qrcode.js') }}"></script>
 </head>
 <body>
-    <div id="main" class="container" style="margin-top: 5rem">
-        <div class="page-banner home-banner">
+    <div id="main" class="container" style="margin-top: 5rem; margin-bottom: 5rem;">
+        <div class="page-banner home-banner" style="max-height: 1000px; height: fit-content;">
             <div class="row align-items-center flex-wrap-reverse h-100">
                 <div class="col-md-4 py-5 wow fadeInLeft">
                     @if ($data != [])
@@ -45,7 +45,7 @@
                                         type: "POST",
                                         data: {
                                             _token: '{{ csrf_token() }}',
-                                            hash: '{{ $data->toArray()["signature_detail"]["hash"] }}'
+                                            public_key: '{{ $data->toArray()["signature_detail"]["public_key"] }}'
                                         },
                                         success: (res) => {
                                             document.querySelector(".img-container").innerHTML = `
@@ -74,14 +74,14 @@
                                                     } else{
                                                         rectangleSide = width
                                                     }
-
+                                                    
                                                     if (height > width) {
                                                         ctx.drawImage( image, 0, 0, image.height * (350/image.width), 350)
                                                     } else {
                                                         ctx.drawImage( image, 0, 0, 350, image.height * (350/image.width))
                                                     }
                                                     const qrcode = new QRCode("qrcode", {
-                                                        text: "{{ url('/verification/qrcode') }}/"+'{{ $data->toArray()["signature_detail"]["hash"] }}',
+                                                        text: "{{ url('/verification/qrcode') }}/"+'{{ $data->toArray()["signature_detail"]["public_key"] }}',
                                                         width: rectangleSide,
                                                         height: rectangleSide,
                                                         colorDark : "#000000",
@@ -90,7 +90,7 @@
                                                     })
                                                     setTimeout(() => {
                                                         // canvas set draw image (elementSelector, distance_from_leftside_canvas, distance_from_topside_canvas, qrcode_height, qrcode_width)
-                                                        ctx.drawImage( document.querySelector('#qrcode img'), 350, canvas.height * 0.1, 150, 150)
+                                                        ctx.drawImage( document.querySelector('#qrcode img'), 360, canvas.height * 0.1, 150, 150)
                                                         const data = canvas.toDataURL("image/png")
                                                     }, 500)
                                                 }, 500)
@@ -100,33 +100,51 @@
                                     })
                                 })
                             </script>
-                            <table width="100%" style="text-align: left; font-weight: bold">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            Nama Mahasiswa
-                                        </td>
-                                        <td>
-                                            {{ $data->student->fullname }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Nama Dosen
-                                        </td>
-                                        <td>
-                                            {{ $data->lecturer->fullname }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            Perihal
-                                        </td>
-                                        <td>
-                                            {{ $data->signatureDetail->note }}
-                                        </td>
-                                    </tr>
-                                </tbody>
+                            <table style="width: 100%; text-align: left; font-weight: bold; word-break: break-all">
+                                <tr>
+                                    <th style="width: 40%"> </th>
+                                    <th> </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Nama Mahasiswa
+                                    </td>
+                                    <td>
+                                        {{ $data->student->fullname }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Nama Dosen
+                                    </td>
+                                    <td>
+                                        {{ $data->lecturer->fullname }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Perihal
+                                    </td>
+                                    <td>
+                                        {{ $data->signatureDetail->note }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Public Key
+                                    </td>
+                                    <td>
+                                        {{ $data->signatureDetail->public_key }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Signature
+                                    </td>
+                                    <td>
+                                        {{ $data->signatureDetail->signature_key }}
+                                    </td>
+                                </tr>
                             </table>
                         @else
                             <i class="mai mai-warning text-danger" style="font-size: 10em;"></i>

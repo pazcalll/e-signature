@@ -85,13 +85,13 @@
     </div>
 
     <script>
-        function openModal(hash) {
+        function openModal(public_key) {
             $(':input','form')
                 .not(':button, :submit, :reset, input[name="_token"]')
                 .val(null)
                 .prop('checked', false)
                 .prop('selected', false)
-            $('#hash').val(hash)
+            $('#public_key').val(public_key)
             $(".dropify-clear").trigger("click")
             $('.modal-sign').modal('show')
         }
@@ -187,7 +187,7 @@
                                 </div>
                             </div>
                             <div id="downloader${meta.row + meta.settings._iDisplayStart + 1}" style="display: flex">
-                                <button class="btn btn-primary" type="button" onclick="downloadSignature(\'${data.signature_detail.hash}\', ${meta.row + meta.settings._iDisplayStart + 1})">
+                                <button class="btn btn-primary" type="button" onclick="downloadSignature(\'${data.signature_detail.public_key}\', ${meta.row + meta.settings._iDisplayStart + 1})">
                                     <i class="mai mai-image"></i>
                                     Unduh Tanda Tangan
                                 </button>
@@ -196,11 +196,11 @@
                         }else {
                             action = `
                             <div style="display: flex">
-                                <button onclick=openModal("${data.signature_detail.hash}") style="margin-right: 10px" type="button" class="btn-primary btn-sm">
+                                <button onclick=openModal("${data.signature_detail.public_key}") style="margin-right: 10px" type="button" class="btn-primary btn-sm">
                                     <i class="mai mai-pencil"></i>
                                     Tanda Tangani
                                 </button>
-                                <button onclick=deleteModal("${data.signature_detail.hash}") type="button" class="btn-danger btn-sm">
+                                <button onclick=deleteModal("${data.signature_detail.public_key}") type="button" class="btn-danger btn-sm">
                                     <i class="mai mai-trash-bin"></i>
                                     Tolak
                                 </button>
@@ -212,13 +212,13 @@
                 }
             ]
         })
-        function downloadSignature(hash, count) {
+        function downloadSignature(public_key, count) {
             $.ajax({
                 url: `{{ url('/get-img') }}`,
                 type: "POST",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    hash: hash
+                    public_key: public_key
                 },
                 beforeSend: () => {
                     document.querySelector(`#downloader${count}`).style.display = "none"
@@ -236,7 +236,7 @@
 
                     image.onload = function() {
                         var canvasHeight = image.height * (700/image.width)
-                        // console.log(image.height+ " " + image.width+" "+canvasHeight)
+                        console.log(image.height+ " " + image.width+" "+canvasHeight)
                         if (parseFloat(canvasHeight) > parseFloat(350)) {
                             canvas.height = canvasHeight
                         }else{
@@ -259,7 +259,7 @@
                                 ctx.drawImage( image, 0, 0, 700, image.height * (700/image.width))
                             }
                             const qrcode = new QRCode("qrcode", {
-                                text: "{{ url('/verification/qrcode') }}/"+hash,
+                                text: "{{ url('/verification/qrcode') }}/"+public_key,
                                 width: rectangleSide,
                                 height: rectangleSide,
                                 colorDark : "#000000",

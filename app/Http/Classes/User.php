@@ -5,6 +5,10 @@ namespace App\Http\Classes;
 use App\Models\Signature;
 use App\Models\SignatureDetail;
 use App\Models\User as AppUser;
+use EllipticCurve\Ecdsa;
+use EllipticCurve\PrivateKey;
+use EllipticCurve\PublicKey;
+use EllipticCurve\Signature as EllipticCurveSignature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +17,10 @@ use Illuminate\Support\Facades\Validator;
 
 class User {
 
-    public function getVerificationQrcode($hash)
+    public function getVerificationQrcode($public_key)
     {
         $data = Signature::with(['signatureDetail' => function($query){
-                    return $query->select('id', 'hash', 'note');
+                    return $query->select('id', 'hash', 'private_key', 'public_key', 'signature_key', 'note');
                 }, 'student' => function($query)
                 {
                     return $query->select('id', 'fullname');
@@ -25,18 +29,22 @@ class User {
                     return $query->select('id', 'fullname');
                 }
             ])
-            ->whereHas('signatureDetail', function($query) use($hash){
-                return $query->where('hash', $hash)->where('signature', '!=', null);
+            ->whereHas('signatureDetail', function($query) use($public_key){
+                return $query->where('public_key', $public_key)->where('signature', '!=', null);
             })
             ->first();
-            // dd($data->toArray());
+        $dataArray = $data->toArray();
+        $verify = Ecdsa::verify($dataArray['signature_detail']['note'], EllipticCurveSignature::_fromString($dataArray['signature_detail']['signature_key']), PublicKey::fromString($dataArray['signature_detail']['public_key']));
+        if (false == $verify) {
+            $data = null;
+        }
         $view = view('public.validator')->with('data', $data);
         return $view;
     }
 
     public function getImg($request)
     {
-        $data = SignatureDetail::where('hash', $request->post('hash'))
+        $data = SignatureDetail::where('public_key', $request->post('public_key'))
             ->select('signature')
             ->first();
         return $data;

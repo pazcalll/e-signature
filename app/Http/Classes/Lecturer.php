@@ -49,15 +49,17 @@ class Lecturer {
 
         $privateKey = PrivateKey::fromString($signatureDetail['private_key']);
         $signature = Ecdsa::sign($signatureDetail['note'], $privateKey);
-        
+        $signatureString = $signature->_toString();
+        // dd(EllipticCurveSignature::_fromString($signature->_toString()));
         $filename = time().'_'.$request->file('signature')->getClientOriginalName();
         $request->file('signature')->storeAs('public/response', $filename);
         $store = SignatureDetail::where('hash', $request->post('hash'))
             ->update([
-                'signature_key' => $signature->toBase64(),
+                'signature_key' => $signatureString,
                 'signature' => 'response/'.$filename
             ]);
         DB::commit();
+        // dd($signatureString);
         return $store;
     }
 
@@ -71,7 +73,7 @@ class Lecturer {
     public function signatureHistory()
     {
         $data = Signature::with(['signatureDetail' => function($query){
-                    return $query->select('id', 'hash', 'note', 'signature', 'deleted_at');
+                    return $query->select('id', 'hash', 'private_key', 'public_key', 'note', 'signature', 'deleted_at');
                 }, 'student' => function($query){
                     return $query->select('id', 'fullname');
                 }

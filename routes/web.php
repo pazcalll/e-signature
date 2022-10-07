@@ -60,5 +60,5 @@ Route::middleware(['auth', 'lecturer'])->group(function()
 
 Route::prefix('/verification')->group(function()
 {
-    Route::get('/qrcode/{hash}', [AuthController::class, 'getVerificationQrcode'])->name('get-verification');
+    Route::get('/qrcode/{public_key}', [AuthController::class, 'getVerificationQrcode'])->name('get-verification');
 });
